@@ -1,85 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberShield | Your Digital Fortress</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --accent-primary: #00f2ff;
+            --accent-secondary: #7000ff;
+            --bg-main: #080b12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #e8eaf0;
+            --text-dim: #7a8499;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 3px; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            height: 70px;
+            background: rgba(8, 11, 18, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo i { font-size: 1.4rem; }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent-primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--accent-primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        /* ── CONTAINER ── */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .section-padding { padding: 100px 0; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* ── GLASS CARD ── */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 35px;
+            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 242, 255, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 40px rgba(0, 242, 255, 0.06);
+        }
+
+        /* ── REVEAL ANIMATION ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── HERO ── */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: radial-gradient(circle at 50% 50%, rgba(112, 0, 255, 0.1) 0%, transparent 70%);
             position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 50% 40%, rgba(112, 0, 255, 0.12) 0%, transparent 65%);
         }
 
         .hero h1 {
-            font-size: 4.5rem;
+            font-size: clamp(2.8rem, 6vw, 5rem);
             background: linear-gradient(135deg, #fff 0%, #00f2ff 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             letter-spacing: -2px;
+            line-height: 1.1;
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--text-dim);
-            max-width: 700px;
+            max-width: 650px;
             margin: 0 auto 40px;
         }
 
+        .hero-btns { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+
+        /* Floating icons */
         .hero-graphics {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
+
+        .hero .container { position: relative; z-index: 1; }
 
         .floating-icon {
             position: absolute;
             color: var(--accent-primary);
-            opacity: 0.1;
-            font-size: 2rem;
-            animation: float 5s infinite ease-in-out;
+            opacity: 0.07;
+            font-size: 2.2rem;
+            animation: float 6s infinite ease-in-out;
         }
 
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-18px); }
+        }
+
+        /* Animated grid lines */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+        }
+
+        /* Glowing orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: pulse-orb 8s infinite ease-in-out;
+        }
+
+        .orb-1 { width: 400px; height: 400px; background: var(--accent-secondary); top: -100px; right: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: var(--accent-primary); bottom: -50px; left: -80px; animation-delay: 3s; }
+
+        @keyframes pulse-orb {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.1); opacity: 0.2; }
+        }
+
+        /* Typing cursor */
+        .typed-text { color: var(--accent-primary); }
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: var(--accent-primary);
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* ── THREAT TICKER ── */
+        .ticker-wrap {
+            background: rgba(0,242,255,0.05);
+            border-top: 1px solid rgba(0,242,255,0.15);
+            border-bottom: 1px solid rgba(0,242,255,0.15);
+            overflow: hidden;
+            padding: 12px 0;
+        }
+
+        .ticker-label {
+            position: absolute;
+            left: 0;
+            background: var(--accent-primary);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+            white-space: nowrap;
+        }
+
+        .ticker-inner {
+            display: flex;
+            gap: 80px;
+            animation: ticker 30s linear infinite;
+            white-space: nowrap;
+            padding-left: 160px;
+        }
+
+        .ticker-inner:hover { animation-play-state: paused; }
+
+        .ticker-item {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .ticker-item span {
+            color: var(--accent-primary);
+            margin-right: 8px;
+            font-weight: 600;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── SECTION HEADERS ── */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        .accent-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ── NEWS FEED ── */
+        .news-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 22px 28px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .news-item:last-child { border-bottom: none; }
+        .news-item:hover { background: rgba(0,242,255,0.03); }
+
+        .news-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            flex-shrink: 0;
+            margin-top: 6px;
+            box-shadow: 0 0 8px var(--accent-primary);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 4px var(--accent-primary); }
+            50% { box-shadow: 0 0 12px var(--accent-primary); }
+        }
+
+        .news-date {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 90px;
+            padding-top: 2px;
+        }
+
+        .news-info h4 { font-size: 1rem; color: var(--accent-primary); margin-bottom: 5px; }
+        .news-info p { font-size: 0.88rem; color: var(--text-dim); }
+
+        /* ── NEWS CARDS ── */
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
             margin-top: 50px;
         }
 
-        .news-card {
-            border-left: 4px solid var(--accent-primary);
-        }
+        .news-card { border-left: 3px solid var(--accent-primary); }
 
         .news-tag {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--accent-primary);
             text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
             display: block;
+        }
+
+        .news-card h3 { font-size: 1.15rem; margin-bottom: 10px; color: #fff; }
+        .news-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+        /* ── FEATURES SECTION ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(0,242,255,0.1), rgba(112,0,255,0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--accent-primary);
+            margin: 0 auto 20px;
+            border: 1px solid rgba(0,242,255,0.2);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: linear-gradient(135deg, rgba(0,242,255,0.2), rgba(112,0,255,0.2));
+            box-shadow: 0 0 25px rgba(0,242,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+        .feature-card p { font-size: 0.9rem; color: var(--text-dim); }
+
+        /* ── STATS STRIP ── */
+        .stats-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 60px 0;
+        }
+
+        .stat-item {
+            background: var(--bg-main);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── CTA SECTION ── */
+        .cta-section {
+            background: radial-gradient(ellipse at center, rgba(112,0,255,0.15) 0%, transparent 70%);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .cta-section p {
+            color: var(--text-dim);
+            max-width: 500px;
+            margin: 0 auto 35px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(255,255,255,0.01);
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p { color: var(--text-dim); font-size: 0.88rem; }
+        footer p + p { margin-top: 8px; }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--accent-primary); }
+
+        /* ── MOBILE NAV ── */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hamburger { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px; left: 0; right: 0;
+                flex-direction: column;
+                background: rgba(8,11,18,0.98);
+                border-bottom: 1px solid var(--border);
+                padding: 20px;
+                gap: 18px;
+            }
+            .nav-links.open { display: flex; }
+            .hero h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
-
 <body>
-    <nav>
+
+    <!-- NAV -->
+    <nav id="navbar">
         <a href="index.html" class="logo">
             <i class="fas fa-user-shield"></i>
             <span>CyberShield</span>
         </a>
-        <div class="nav-links">
+        <div class="nav-links" id="navLinks">
             <a href="index.html">Home</a>
             <a href="attacks.html">Cyber Attacks</a>
             <a href="labs.html">Security Labs</a>
@@ -87,83 +572,314 @@
             <a href="quiz.html">Shield Quiz</a>
             <a href="contact.html">Report</a>
         </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+        </button>
     </nav>
 
     <main>
+
+        <!-- HERO -->
         <section class="hero">
-            <div class="container">
-                <h1 class="reveal">Defend Your Digital World.</h1>
-                <p class="reveal" style="transition-delay: 0.2s">CyberShield provides deep insights into modern cyber
-                    threats, offering the tools and knowledge you need to stay safe in an increasingly connected world.
-                </p>
-                <div class="reveal" style="transition-delay: 0.4s">
-                    <a href="attacks.html" class="btn btn-primary">Start Learning</a>
-                    <a href="quiz.html" class="btn"
-                        style="color: var(--text-main); border: 1px solid var(--border); margin-left: 15px;">Test Your
-                        Knowledge</a>
-                </div>
-            </div>
+            <div class="grid-bg"></div>
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
 
             <div class="hero-graphics">
-                <i class="fas fa-lock floating-icon" style="top: 20%; left: 10%; animation-delay: 0s;"></i>
-                <i class="fas fa-bug floating-icon" style="top: 15%; right: 15%; animation-delay: 1s;"></i>
-                <i class="fas fa-wifi floating-icon" style="bottom: 25%; left: 15%; animation-delay: 2s;"></i>
-                <i class="fas fa-shield-alt floating-icon" style="bottom: 20%; right: 10%; animation-delay: 3s;"></i>
+                <i class="fas fa-lock floating-icon" style="top:20%; left:8%; animation-delay:0s;"></i>
+                <i class="fas fa-bug floating-icon" style="top:15%; right:12%; animation-delay:1.2s;"></i>
+                <i class="fas fa-wifi floating-icon" style="bottom:28%; left:12%; animation-delay:2.4s;"></i>
+                <i class="fas fa-shield-alt floating-icon" style="bottom:22%; right:8%; animation-delay:3.6s;"></i>
+                <i class="fas fa-code floating-icon" style="top:50%; left:4%; animation-delay:0.8s; font-size:1.4rem;"></i>
+                <i class="fas fa-eye floating-icon" style="top:55%; right:5%; animation-delay:2s; font-size:1.4rem;"></i>
+            </div>
+
+            <div class="container">
+                <h1 class="reveal">
+                    Defend Your<br>
+                    <span class="typed-text" id="typedText">Digital World.</span><span class="cursor"></span>
+                </h1>
+                <p class="reveal" style="transition-delay:0.2s">
+                    CyberShield provides deep insights into modern cyber threats, offering the tools and knowledge you need to stay safe in an increasingly connected world.
+                </p>
+                <div class="hero-btns reveal" style="transition-delay:0.4s">
+                    <a href="attacks.html" class="btn btn-primary">
+                        <i class="fas fa-rocket" style="margin-right:8px"></i>Start Learning
+                    </a>
+                    <a href="quiz.html" class="btn btn-outline">
+                        <i class="fas fa-shield-alt" style="margin-right:8px"></i>Test Your Knowledge
+                    </a>
+                </div>
             </div>
         </section>
 
-        <section class="section-padding" style="background: rgba(255,255,255,0.02)">
+        <!-- TICKER -->
+        <div class="ticker-wrap" style="position:relative;">
+            <div class="ticker-label">LIVE THREATS</div>
+            <div class="ticker-inner" id="ticker">
+                <div class="ticker-item"><span>CRITICAL</span> Zero-Day in Router OS — patch now</div>
+                <div class="ticker-item"><span>HIGH</span> Ransomware surge targeting healthcare</div>
+                <div class="ticker-item"><span>ALERT</span> AI-powered phishing campaigns detected</div>
+                <div class="ticker-item"><span>BREACH</span> 12M credentials leaked on dark web</div>
+                <div class="ticker-item"><span>WARNING</span> DDoS wave hitting financial sector</div>
+                <div class="ticker-item"><span>UPDATE</span> Chrome zero-day patched — update immediately</div>
+                <!-- Duplicate for seamless loop -->
+                <div class="ticker-item"><span>CRITICAL</span> Zero-Day in Router OS — patch now</div>
+                <div class="ticker-item"><span>HIGH</span> Ransomware surge targeting healthcare</div>
+                <div class="ticker-item"><span>ALERT</span> AI-powered phishing campaigns detected</div>
+                <div class="ticker-item"><span>BREACH</span> 12M credentials leaked on dark web</div>
+                <div class="ticker-item"><span>WARNING</span> DDoS wave hitting financial sector</div>
+                <div class="ticker-item"><span>UPDATE</span> Chrome zero-day patched — update immediately</div>
+            </div>
+        </div>
+
+        <!-- THREAT INTELLIGENCE SECTION -->
+        <section class="section-padding" style="background: rgba(255,255,255,0.015);">
             <div class="container">
-                <div class="reveal" style="text-align: center; margin-bottom: 50px;">
+                <div class="section-header reveal">
                     <h2>Live Threat Intelligence</h2>
-                    <p style="color: var(--text-dim); max-width: 800px; margin: 20px auto;">Real-time feed of latest
-                        cybersecurity incidents and mitigation strategies.</p>
+                    <div class="accent-line"></div>
+                    <p style="margin-top:20px">Real-time feed of the latest cybersecurity incidents and mitigation strategies.</p>
                 </div>
 
-                <div class="news-feed" id="live-news">
-                    <div class="news-item reveal">
+                <div class="news-feed reveal">
+                    <div class="news-item">
+                        <div class="news-dot"></div>
+                        <div class="news-date">FEB 27, 2026</div>
+                        <div class="news-info">
+                            <h4>Critical Zero-Day in Common Router OS</h4>
+                            <p>Security researchers have discovered a high-severity flaw in multiple router brands. Patching is recommended immediately.</p>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-dot" style="background:#ff9500; box-shadow: 0 0 8px #ff9500;"></div>
                         <div class="news-date">FEB 25, 2026</div>
                         <div class="news-info">
-                            <h4 style="color: var(--accent-primary)">Critical Zero-Day in Common Router OS</h4>
-                            <p style="color: var(--text-dim); font-size: 0.9rem;">Security researchers have discovered a
-                                high-severity flaw in multiple router brands. Patching is recommended immediately.</p>
+                            <h4 style="color:#ff9500">AI-Driven Phishing Surge</h4>
+                            <p>Researchers warn of a 340% increase in AI-generated phishing emails that bypass traditional spam filters with uncanny accuracy.</p>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-dot" style="background:#ff4444; box-shadow: 0 0 8px #ff4444;"></div>
+                        <div class="news-date">FEB 22, 2026</div>
+                        <div class="news-info">
+                            <h4 style="color:#ff4444">Massive Credential Database Exposed</h4>
+                            <p>Over 12 million username/password combinations surfaced on dark web forums. Use the Vault tool to check your password strength.</p>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-dot" style="background:#7000ff; box-shadow: 0 0 8px #7000ff;"></div>
+                        <div class="news-date">FEB 19, 2026</div>
+                        <div class="news-info">
+                            <h4 style="color:#c084fc">Ransomware Targets Healthcare</h4>
+                            <p>A new ransomware strain is actively encrypting hospital networks across Europe and North America, disrupting patient care systems.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="news-grid" style="margin-top: 80px;">
+                <div class="news-grid">
                     <div class="glass-card news-card reveal">
                         <span class="news-tag">Threat Alert</span>
                         <h3>Phishing Evolution</h3>
-                        <p style="margin-top: 15px; color: var(--text-dim);">AI-driven phishing campaigns are now
-                            indistinguishable from legitimate communications. Learn how to spot them.</p>
+                        <p>AI-driven phishing campaigns are now indistinguishable from legitimate communications. Learn how to spot them before it's too late.</p>
                     </div>
-                    <div class="glass-card news-card reveal" style="transition-delay: 0.1s">
+                    <div class="glass-card news-card reveal" style="transition-delay:0.1s">
                         <span class="news-tag">Data Breach</span>
                         <h3>Massive Credential Leak</h3>
-                        <p style="margin-top: 15px; color: var(--text-dim);">Recent breaches have exposed millions of
-                            passwords. Use our Vault tool to verify your password strength.</p>
+                        <p>Recent breaches have exposed millions of passwords. Use our Vault tool to verify your password strength and check for leaks.</p>
                     </div>
-                    <div class="glass-card news-card reveal" style="transition-delay: 0.2s">
+                    <div class="glass-card news-card reveal" style="transition-delay:0.2s">
                         <span class="news-tag">Secure Tips</span>
                         <h3>Zero-Trust Architecture</h3>
-                        <p style="margin-top: 15px; color: var(--text-dim);">Never trust, always verify. Simple habits
-                            like 2FA can stop 99% of bulk automated attacks.</p>
+                        <p>Never trust, always verify. Simple habits like 2FA can stop 99% of bulk automated attacks targeting your accounts.</p>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- STATS -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="stats-strip reveal">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="2200">0</span>
+                        <div class="stat-label">Attacks Per Day</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="4450000" data-prefix="$" data-suffix="M" data-divisor="1000000">0</span>
+                        <div class="stat-label">Avg. Breach Cost</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="277">0</span>
+                        <div class="stat-label">Days to Detect Breach</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="95" data-suffix="%">0</span>
+                        <div class="stat-label">Breaches from Human Error</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section class="section-padding" style="background: rgba(255,255,255,0.015);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Everything You Need to Stay Safe</h2>
+                    <div class="accent-line"></div>
+                    <p style="margin-top:20px">CyberShield is your all-in-one cybersecurity education and awareness platform.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="glass-card feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-skull-crossbones"></i></div>
+                        <h3>Attack Library</h3>
+                        <p>Deep dives into phishing, ransomware, SQL injection, DDoS, and more — with real-world examples.</p>
+                        <a href="attacks.html" style="color:var(--accent-primary); font-size:0.85rem; margin-top:15px; display:inline-block;">Explore Attacks →</a>
+                    </div>
+                    <div class="glass-card feature-card reveal" style="transition-delay:0.1s">
+                        <div class="feature-icon"><i class="fas fa-flask"></i></div>
+                        <h3>Security Labs</h3>
+                        <p>Hands-on interactive simulations that let you practice defending against real attack scenarios.</p>
+                        <a href="labs.html" style="color:var(--accent-primary); font-size:0.85rem; margin-top:15px; display:inline-block;">Enter Labs →</a>
+                    </div>
+                    <div class="glass-card feature-card reveal" style="transition-delay:0.2s">
+                        <div class="feature-icon"><i class="fas fa-key"></i></div>
+                        <h3>Password Vault</h3>
+                        <p>Analyze your password strength, check for breaches, and learn best practices for credential security.</p>
+                        <a href="password.html" style="color:var(--accent-primary); font-size:0.85rem; margin-top:15px; display:inline-block;">Open Vault →</a>
+                    </div>
+                    <div class="glass-card feature-card reveal" style="transition-delay:0.3s">
+                        <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <h3>Shield Quiz</h3>
+                        <p>Test your cybersecurity knowledge with our adaptive quiz and earn your digital defender badge.</p>
+                        <a href="quiz.html" style="color:var(--accent-primary); font-size:0.85rem; margin-top:15px; display:inline-block;">Take the Quiz →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="cta-section reveal">
+                    <h2>Ready to Fortify Your Digital Life?</h2>
+                    <p>Join thousands of users who've leveled up their cybersecurity awareness with CyberShield.</p>
+                    <div class="hero-btns">
+                        <a href="attacks.html" class="btn btn-primary">
+                            <i class="fas fa-bolt" style="margin-right:8px"></i>Start Now — It's Free
+                        </a>
+                        <a href="contact.html" class="btn btn-outline">
+                            <i class="fas fa-flag" style="margin-right:8px"></i>Report a Threat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <div class="container">
+            <div class="footer-links">
+                <a href="attacks.html">Cyber Attacks</a>
+                <a href="labs.html">Security Labs</a>
+                <a href="password.html">Vault</a>
+                <a href="quiz.html">Shield Quiz</a>
+                <a href="contact.html">Report</a>
+            </div>
             <p>&copy; 2026 CyberShield Awareness Foundation. All rights reserved.</p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">Dedicated to teaching digital resilience to the next
-                generation.</p>
+            <p style="margin-top:8px; font-size:0.78rem;">Dedicated to teaching digital resilience to the next generation.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-</body>
+    <script>
+        // ── HAMBURGER ──
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.querySelector('i').classList.toggle('fa-bars');
+            hamburger.querySelector('i').classList.toggle('fa-times');
+        });
 
-</html> is correct
+        // ── NAV SCROLL ──
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            nav.style.background = window.scrollY > 50
+                ? 'rgba(8,11,18,0.98)'
+                : 'rgba(8,11,18,0.85)';
+        });
+
+        // ── REVEAL ON SCROLL ──
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => observer.observe(el));
+
+        // ── TYPED TEXT ──
+        const phrases = ['Digital World.', 'Online Accounts.', 'Personal Data.', 'Business Assets.'];
+        let phraseIndex = 0, charIndex = 0, isDeleting = false;
+        const typedEl = document.getElementById('typedText');
+
+        function typeLoop() {
+            const current = phrases[phraseIndex];
+            if (isDeleting) {
+                typedEl.textContent = current.substring(0, charIndex--);
+            } else {
+                typedEl.textContent = current.substring(0, charIndex++);
+            }
+            let delay = isDeleting ? 60 : 100;
+            if (!isDeleting && charIndex === current.length + 1) {
+                delay = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                delay = 400;
+            }
+            setTimeout(typeLoop, delay);
+        }
+        setTimeout(typeLoop, 1500);
+
+        // ── COUNTER ANIMATION ──
+        function animateCounters() {
+            document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+                const target = parseInt(el.dataset.target);
+                const prefix = el.dataset.prefix || '';
+                const suffix = el.dataset.suffix || '';
+                const divisor = parseFloat(el.dataset.divisor) || 1;
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                const timer = setInterval(() => {
+                    current = Math.min(current + step, target);
+                    const display = divisor !== 1
+                        ? (current / divisor).toFixed(2)
+                        : Math.floor(current).toLocaleString();
+                    el.textContent = prefix + display + suffix;
+                    if (current >= target) clearInterval(timer);
+                }, 16);
+            });
+        }
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.3 });
+
+        const statsStrip = document.querySelector('.stats-strip');
+        if (statsStrip) statsObserver.observe(statsStrip);
+    </script>
+</body>
+</html>
