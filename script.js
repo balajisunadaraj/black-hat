@@ -70,3 +70,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
 });
+function checkBleached() {
+    let text = document.getElementById("dataInput").value;
+    let searchWord = "bleached";
+    let lowerText = text.toLowerCase();
+    let position = lowerText.indexOf(searchWord);
+
+    if (position !== -1) {
+        let highlightedText = text.substring(0, position) +
+            "<span class='highlight'>" +
+            text.substring(position, position + searchWord.length) +
+            "</span>" +
+            text.substring(position + searchWord.length);
+
+        document.getElementById("result").innerHTML =
+            "⚠️ Data is BLEACHED at position: " + position +
+            "<br><br>" + highlightedText;
+    } else {
+        document.getElementById("result").innerHTML =
+            "✅ Data is NOT bleached.";
+    }
+}
