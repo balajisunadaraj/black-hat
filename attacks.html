@@ -1,35 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Threat Intel | CyberShield</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --accent-primary: #00f2ff;
+            --accent-secondary: #7000ff;
+            --bg-main: #080b12;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #e8eaf0;
+            --text-dim: #7a8499;
+            --success: #00e676;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 3px; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            height: 70px;
+            background: rgba(8, 11, 18, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-links { display: flex; gap: 35px; }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent-primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active { color: var(--accent-primary); }
+        .nav-links a:hover::after,
+        .nav-links a.active::after { width: 100%; }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        /* ── LAYOUT ── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+
+        /* ── REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── PAGE HEADER ── */
         .page-header {
-            padding: 150px 0 60px;
-            background: linear-gradient(to bottom, rgba(5, 6, 10, 1), transparent);
+            padding: 160px 0 80px;
             text-align: center;
-        }
-
-        .threat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-bottom: 100px;
-        }
-
-        .threat-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: radial-gradient(ellipse at 50% 0%, rgba(0,242,255,0.08) 0%, transparent 60%);
             position: relative;
             overflow: hidden;
         }
 
+        .page-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+            pointer-events: none;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            background: linear-gradient(135deg, #fff 0%, #00f2ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            margin-bottom: 15px;
+        }
+
+        .page-header p { color: var(--text-dim); font-size: 1.1rem; max-width: 550px; margin: 15px auto 0; }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,242,255,0.08);
+            border: 1px solid rgba(0,242,255,0.2);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ── GLASS CARD ── */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 35px;
+        }
+
+
+
+        /* ── THREAT GRID ── */
+        .threat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+            margin-bottom: 100px;
+        }
+
+        /* ── THREAT CARD ── */
+        .threat-card {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .threat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .threat-card:hover::before { transform: scaleX(1); }
         .threat-card:hover {
-            transform: scale(1.02);
-            border-color: var(--accent-primary);
+            transform: translateY(-6px);
+            border-color: rgba(0,242,255,0.3);
+            box-shadow: 0 12px 40px rgba(0,242,255,0.07);
         }
 
         .threat-icon {
@@ -39,8 +202,27 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: block;
         }
 
+        .severity {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+        .sev-critical { background: rgba(255,50,50,0.12); color: #ff4444; border: 1px solid rgba(255,50,50,0.25); }
+        .sev-high     { background: rgba(255,150,0,0.12); color: #ff9500; border: 1px solid rgba(255,150,0,0.25); }
+        .sev-medium   { background: rgba(255,220,0,0.12); color: #ffdc00; border: 1px solid rgba(255,220,0,0.25); }
+
+        .threat-card h3 { font-size: 1.3rem; margin-bottom: 12px; color: #fff; }
+        .threat-card > p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.7; }
+
+        /* ── PREVENTION LIST ── */
         .prevention-list {
             list-style: none;
             margin-top: 20px;
@@ -55,115 +237,218 @@
             align-items: center;
             gap: 10px;
             color: var(--text-dim);
+            transition: color 0.2s;
         }
 
-        .prevention-list li i {
-            color: var(--success);
-            font-size: 0.8rem;
+        .prevention-list li:hover { color: var(--text-main); }
+        .prevention-list li i { color: var(--success); font-size: 0.8rem; flex-shrink: 0; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(255,255,255,0.01);
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p { color: var(--text-dim); font-size: 0.88rem; }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--accent-primary); }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .hamburger { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px; left: 0; right: 0;
+                flex-direction: column;
+                background: rgba(8,11,18,0.98);
+                border-bottom: 1px solid var(--border);
+                padding: 20px;
+                gap: 18px;
+            }
+            .nav-links.open { display: flex; }
+            .threat-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-
 <body>
-    <nav>
+
+    <nav id="navbar">
         <a href="index.html" class="logo">
             <i class="fas fa-user-shield"></i>
             <span>CyberShield</span>
         </a>
-        <div class="nav-links">
+        <div class="nav-links" id="navLinks">
             <a href="index.html">Home</a>
-            <a href="attacks.html">Cyber Attacks</a>
+            <a href="attacks.html" class="active">Cyber Attacks</a>
             <a href="labs.html">Security Labs</a>
             <a href="password.html">Vault</a>
             <a href="quiz.html">Shield Quiz</a>
             <a href="contact.html">Report</a>
         </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+        </button>
     </nav>
 
     <header class="page-header">
         <div class="container reveal">
+            <div class="header-badge">
+                <i class="fas fa-circle" style="color:#ff4444; font-size:0.5rem;"></i> Live Threat Database
+            </div>
             <h1>Anatomy of an Attack</h1>
-            <p style="color: var(--text-dim); margin-top: 15px;">Understand your enemies to build your defense. Explore
-                common cyber threats below.</p>
+            <p>Understand your enemies to build your defense. Explore common cyber threats below.</p>
         </div>
     </header>
 
     <main class="container">
+
+
+
         <div class="threat-grid">
-            <!-- Phishing -->
+
             <div class="glass-card threat-card reveal">
                 <i class="fas fa-envelope-open-text threat-icon"></i>
+                <span class="severity sev-critical">Critical</span>
                 <h3>Phishing</h3>
-                <p style="color: var(--text-dim);">Fraudulent attempts to obtain sensitive information like usernames,
-                    passwords, and credit card details by disguising as a trustworthy entity.</p>
+                <p>Fraudulent attempts to obtain sensitive information like usernames, passwords, and credit card details by disguising as a trustworthy entity.</p>
                 <ul class="prevention-list">
-                    <li><i class="fas fa-check"></i> Check the sender's email address</li>
-                    <li><i class="fas fa-check"></i> Never click suspicious links</li>
-                    <li><i class="fas fa-check"></i> Enable 2-Factor Authentication</li>
+                    <li><i class="fas fa-check"></i> Check the sender's email address carefully</li>
+                    <li><i class="fas fa-check"></i> Never click suspicious or unexpected links</li>
+                    <li><i class="fas fa-check"></i> Enable 2-Factor Authentication on all accounts</li>
                 </ul>
             </div>
 
-            <!-- Malware -->
-            <div class="glass-card threat-card reveal" style="transition-delay: 0.1s">
+            <div class="glass-card threat-card reveal" style="transition-delay:0.1s">
                 <i class="fas fa-virus threat-icon"></i>
+                <span class="severity sev-critical">Critical</span>
                 <h3>Malware</h3>
-                <p style="color: var(--text-dim);">Malicious software specifically designed to disrupt, damage, or gain
-                    unauthorized access to a computer system without the user's consent.</p>
+                <p>Malicious software specifically designed to disrupt, damage, or gain unauthorized access to a computer system without the user's consent.</p>
                 <ul class="prevention-list">
-                    <li><i class="fas fa-check"></i> Keep software updated</li>
-                    <li><i class="fas fa-check"></i> Use trusted antivirus tools</li>
-                    <li><i class="fas fa-check"></i> Scan all downloaded files</li>
+                    <li><i class="fas fa-check"></i> Keep all software and OS fully updated</li>
+                    <li><i class="fas fa-check"></i> Use trusted antivirus and anti-malware tools</li>
+                    <li><i class="fas fa-check"></i> Scan all downloaded files before opening</li>
                 </ul>
             </div>
 
-            <!-- Ransomware -->
-            <div class="glass-card threat-card reveal" style="transition-delay: 0.2s">
-                <i class="fas fa-user-secret threat-icon"></i>
+            <div class="glass-card threat-card reveal" style="transition-delay:0.2s">
+                <i class="fas fa-lock threat-icon"></i>
+                <span class="severity sev-critical">Critical</span>
                 <h3>Ransomware</h3>
-                <p style="color: var(--text-dim);">A type of malware that locks and encrypts a victim's data, demanding
-                    a ransom payment to regain access to the files.</p>
+                <p>A type of malware that locks and encrypts a victim's data, demanding a ransom payment to regain access to the files.</p>
                 <ul class="prevention-list">
-                    <li><i class="fas fa-check"></i> Regular off-site backups</li>
-                    <li><i class="fas fa-check"></i> Don't pay the ransom</li>
-                    <li><i class="fas fa-check"></i> Report attacks immediately</li>
+                    <li><i class="fas fa-check"></i> Maintain regular off-site and offline backups</li>
+                    <li><i class="fas fa-check"></i> Never pay the ransom — it rarely works</li>
+                    <li><i class="fas fa-check"></i> Report attacks to authorities immediately</li>
                 </ul>
             </div>
 
-            <!-- SQL Injection -->
             <div class="glass-card threat-card reveal">
                 <i class="fas fa-database threat-icon"></i>
+                <span class="severity sev-high">High</span>
                 <h3>SQL Injection</h3>
-                <p style="color: var(--text-dim);">A code injection technique where malicious SQL statements are
-                    inserted into entry fields for execution to manipulate back-end databases.</p>
+                <p>A code injection technique where malicious SQL statements are inserted into entry fields for execution to manipulate back-end databases.</p>
                 <ul class="prevention-list">
-                    <li><i class="fas fa-check"></i> Use prepared statements</li>
-                    <li><i class="fas fa-check"></i> Input validation & sanitization</li>
-                    <li><i class="fas fa-check"></i> Principle of least privilege</li>
+                    <li><i class="fas fa-check"></i> Use prepared statements and parameterized queries</li>
+                    <li><i class="fas fa-check"></i> Validate and sanitize all user inputs</li>
+                    <li><i class="fas fa-check"></i> Apply the principle of least privilege to DBs</li>
                 </ul>
             </div>
 
-            <!-- MITM -->
-            <div class="glass-card threat-card reveal" style="transition-delay: 0.1s">
+            <div class="glass-card threat-card reveal" style="transition-delay:0.1s">
                 <i class="fas fa-network-wired threat-icon"></i>
-                <h3>Man-in-the-middle</h3>
-                <p style="color: var(--text-dim);">An attacker secretly relays and possibly alters the communication
-                    between two parties who believe they are directly communicating with each other.</p>
+                <span class="severity sev-high">High</span>
+                <h3>Man-in-the-Middle</h3>
+                <p>An attacker secretly relays and possibly alters the communication between two parties who believe they are directly communicating with each other.</p>
                 <ul class="prevention-list">
-                    <li><i class="fas fa-check"></i> Use encrypted connections (HTTPS)</li>
-                    <li><i class="fas fa-check"></i> Avoid public unsecured Wi-Fi</li>
-                    <li><i class="fas fa-check"></i> Use a reputable VPN</li>
+                    <li><i class="fas fa-check"></i> Only use encrypted HTTPS connections</li>
+                    <li><i class="fas fa-check"></i> Avoid public or unsecured Wi-Fi networks</li>
+                    <li><i class="fas fa-check"></i> Use a reputable VPN when on public networks</li>
                 </ul>
             </div>
+
+            <div class="glass-card threat-card reveal" style="transition-delay:0.2s">
+                <i class="fas fa-server threat-icon"></i>
+                <span class="severity sev-medium">Medium</span>
+                <h3>DDoS Attack</h3>
+                <p>Distributed Denial of Service attacks flood a target server with massive traffic from thousands of compromised devices, making it unavailable to real users.</p>
+                <ul class="prevention-list">
+                    <li><i class="fas fa-check"></i> Use a CDN or DDoS mitigation service</li>
+                    <li><i class="fas fa-check"></i> Implement rate limiting on your servers</li>
+                    <li><i class="fas fa-check"></i> Monitor traffic patterns for anomalies</li>
+                </ul>
+            </div>
+
         </div>
     </main>
 
     <footer>
         <div class="container">
+            <div class="footer-links">
+                <a href="attacks.html">Cyber Attacks</a>
+                <a href="labs.html">Security Labs</a>
+                <a href="password.html">Vault</a>
+                <a href="quiz.html">Shield Quiz</a>
+                <a href="contact.html">Report</a>
+            </div>
             <p>&copy; 2026 CyberShield Awareness Foundation. All rights reserved.</p>
+            <p style="margin-top:8px; font-size:0.78rem;">Dedicated to teaching digital resilience to the next generation.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-</body>
+    <script>
+        // ── HAMBURGER ──
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            hamburger.querySelector('i').classList.toggle('fa-bars');
+            hamburger.querySelector('i').classList.toggle('fa-times');
+        });
 
+        // ── NAV SCROLL ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').style.background = window.scrollY > 50
+                ? 'rgba(8,11,18,0.98)'
+                : 'rgba(8,11,18,0.85)';
+        });
+
+        // ── REVEAL ON SCROLL ──
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+        revealElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                el.classList.add('visible');
+            } else {
+                observer.observe(el);
+            }
+        });
+
+
+    </script>
+</body>
 </html>
