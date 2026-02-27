@@ -1,169 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberShield | Your Digital Fortress</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: radial-gradient(circle at 50% 50%, rgba(112, 0, 255, 0.1) 0%, transparent 70%);
-            position: relative;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberShield | Your Digital Fortress</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* Reset */
+  * {margin:0; padding:0; box-sizing:border-box;}
+  body {font-family: 'Segoe UI', sans-serif; background:#05060a; color:white;}
 
-        .hero h1 {
-            font-size: 4.5rem;
-            background: linear-gradient(135deg, #fff 0%, #00f2ff 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-            letter-spacing: -2px;
-        }
+  nav {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 40px; background:rgba(0,0,0,0.5);
+    position:fixed; width:100%; z-index:100;
+  }
+  nav .logo {font-size:1.5rem; display:flex; align-items:center; gap:10px; color:#00f2ff;}
+  nav .nav-links a {margin-left:20px; color:white; text-decoration:none;}
+  nav .nav-links a.active {color:#00f2ff;}
 
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            max-width: 700px;
-            margin: 0 auto 40px;
-        }
+  /* Hero */
+  .hero {
+    height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    background: radial-gradient(circle at 50% 50%, rgba(112,0,255,0.1) 0%, transparent 70%);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero h1 {
+    font-size:4rem;
+    background: linear-gradient(135deg,#fff 0%, #00f2ff 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:20px;
+    letter-spacing:-1px;
+  }
+  .hero p {color:#aaa; max-width:700px; margin-bottom:30px;}
+  .hero .btn {padding:12px 24px; border-radius:8px; margin:5px; text-decoration:none; cursor:pointer;}
+  .btn-primary {background:#00f2ff; color:#05060a;}
+  .btn:hover {opacity:0.8; transition:0.3s;}
 
-        .hero-graphics {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
+  /* Floating icons */
+  .floating-icon {position:absolute; font-size:2rem; color:#00f2ff; opacity:0.1; animation:float 5s ease-in-out infinite;}
+  @keyframes float {0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
 
-        .floating-icon {
-            position: absolute;
-            color: var(--accent-primary);
-            opacity: 0.1;
-            font-size: 2rem;
-            animation: float 5s infinite ease-in-out;
-        }
+  /* Reveal animation */
+  .reveal {opacity:0; transform:translateY(20px); transition:1s ease;}
+  .reveal.active {opacity:1; transform:translateY(0);}
 
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
+  /* News feed */
+  .news-feed, .news-grid {width:90%; max-width:1000px; margin:50px auto; display:grid; gap:30px;}
+  .news-item, .glass-card {background:rgba(255,255,255,0.05); padding:20px; border-radius:12px;}
+  .news-item .news-date {font-size:0.8rem; color:#00f2ff; margin-bottom:5px;}
+  .news-item h4 {color:#00f2ff;}
+  .glass-card h3 {color:white; margin-bottom:10px;}
+  .news-tag {font-size:0.8rem; color:#00f2ff; text-transform:uppercase; font-weight:600; margin-bottom:10px; display:block;}
 
-        .news-card {
-            border-left: 4px solid var(--accent-primary);
-        }
-
-        .news-tag {
-            font-size: 0.8rem;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: block;
-        }
-    </style>
+  /* Footer */
+  footer {background:rgba(0,0,0,0.5); text-align:center; padding:20px; margin-top:50px;}
+</style>
 </head>
-
 <body>
-    <nav>
-        <a href="index.html" class="logo">
-            <i class="fas fa-user-shield"></i>
-            <span>CyberShield</span>
-        </a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="attacks.html">Cyber Attacks</a>
-            <a href="labs.html">Security Labs</a>
-            <a href="password.html">Vault</a>
-            <a href="quiz.html">Shield Quiz</a>
-            <a href="contact.html">Report</a>
-        </div>
-    </nav>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1 class="reveal">Defend Your Digital World.</h1>
-                <p class="reveal" style="transition-delay: 0.2s">CyberShield provides deep insights into modern cyber
-                    threats, offering the tools and knowledge you need to stay safe in an increasingly connected world.
-                </p>
-                <div class="reveal" style="transition-delay: 0.4s">
-                    <a href="attacks.html" class="btn btn-primary">Start Learning</a>
-                    <a href="quiz.html" class="btn"
-                        style="color: var(--text-main); border: 1px solid var(--border); margin-left: 15px;">Test Your
-                        Knowledge</a>
-                </div>
-            </div>
+<nav>
+  <a href="#" class="logo"><i class="fas fa-user-shield"></i>CyberShield</a>
+  <div class="nav-links">
+    <a href="#" class="active">Home</a>
+    <a href="#">Cyber Attacks</a>
+    <a href="#">Security Labs</a>
+    <a href="#">Vault</a>
+    <a href="#">Shield Quiz</a>
+    <a href="#">Report</a>
+  </div>
+</nav>
 
-            <div class="hero-graphics">
-                <i class="fas fa-lock floating-icon" style="top: 20%; left: 10%; animation-delay: 0s;"></i>
-                <i class="fas fa-bug floating-icon" style="top: 15%; right: 15%; animation-delay: 1s;"></i>
-                <i class="fas fa-wifi floating-icon" style="bottom: 25%; left: 15%; animation-delay: 2s;"></i>
-                <i class="fas fa-shield-alt floating-icon" style="bottom: 20%; right: 10%; animation-delay: 3s;"></i>
-            </div>
-        </section>
+<section class="hero">
+  <h1 class="reveal">Defend Your Digital World.</h1>
+  <p class="reveal" style="transition-delay:0.2s">CyberShield provides deep insights into modern cyber threats and tools to keep you safe.</p>
+  <div class="reveal" style="transition-delay:0.4s">
+    <a href="#" class="btn btn-primary">Start Learning</a>
+    <a href="#" class="btn" style="border:1px solid #aaa; color:#aaa;">Test Your Knowledge</a>
+  </div>
+  <i class="fas fa-lock floating-icon" style="top:10%; left:10%; animation-delay:0s;"></i>
+  <i class="fas fa-bug floating-icon" style="top:20%; right:15%; animation-delay:1s;"></i>
+  <i class="fas fa-wifi floating-icon" style="bottom:25%; left:15%; animation-delay:2s;"></i>
+  <i class="fas fa-shield-alt floating-icon" style="bottom:20%; right:10%; animation-delay:3s;"></i>
+</section>
 
-        <section class="section-padding" style="background: rgba(255,255,255,0.02)">
-            <div class="container">
-                <div class="reveal" style="text-align: center; margin-bottom: 50px;">
-                    <h2>Live Threat Intelligence</h2>
-                    <p style="color: var(--text-dim); max-width: 800px; margin: 20px auto;">Real-time feed of latest
-                        cybersecurity incidents and mitigation strategies.</p>
-                </div>
+<section class="news-feed reveal" id="live-news">
+  <div class="news-item reveal">
+    <div class="news-date">FEB 25, 2026</div>
+    <div class="news-info">
+      <h4>Critical Zero-Day in Router OS</h4>
+      <p>Security researchers discovered a high-severity flaw. Patch immediately.</p>
+    </div>
+  </div>
+</section>
 
-                <div class="news-feed" id="live-news">
-                    <div class="news-item reveal">
-                        <div class="news-date">FEB 25, 2026</div>
-                        <div class="news-info">
-                            <h4 style="color: var(--accent-primary)">Critical Zero-Day in Common Router OS</h4>
-                            <p style="color: var(--text-dim); font-size: 0.9rem;">Security researchers have discovered a
-                                high-severity flaw in multiple router brands. Patching is recommended immediately.</p>
-                        </div>
-                    </div>
-                </div>
+<section class="news-grid reveal">
+  <div class="glass-card news-card reveal">
+    <span class="news-tag">Threat Alert</span>
+    <h3>Phishing Evolution</h3>
+    <p>AI-driven phishing campaigns are now indistinguishable from legitimate communications.</p>
+  </div>
+  <div class="glass-card news-card reveal">
+    <span class="news-tag">Data Breach</span>
+    <h3>Massive Credential Leak</h3>
+    <p>Recent breaches have exposed millions of passwords. Verify your password strength.</p>
+  </div>
+  <div class="glass-card news-card reveal">
+    <span class="news-tag">Secure Tips</span>
+    <h3>Zero-Trust Architecture</h3>
+    <p>Never trust, always verify. 2FA can stop 99% of automated attacks.</p>
+  </div>
+</section>
 
-                <div class="news-grid" style="margin-top: 80px;">
-                    <div class="glass-card news-card reveal">
-                        <span class="news-tag">Threat Alert</span>
-                        <h3>Phishing Evolution</h3>
-                        <p style="margin-top: 15px; color: var(--text-dim);">AI-driven phishing campaigns are now
-                            indistinguishable from legitimate communications. Learn how to spot them.</p>
-                    </div>
-                    <div class="glass-card news-card reveal" style="transition-delay: 0.1s">
-                        <span class="news-tag">Data Breach</span>
-                        <h3>Massive Credential Leak</h3>
-                        <p style="margin-top: 15px; color: var(--text-dim);">Recent breaches have exposed millions of
-                            passwords. Use our Vault tool to verify your password strength.</p>
-                    </div>
-                    <div class="glass-card news-card reveal" style="transition-delay: 0.2s">
-                        <span class="news-tag">Secure Tips</span>
-                        <h3>Zero-Trust Architecture</h3>
-                        <p style="margin-top: 15px; color: var(--text-dim);">Never trust, always verify. Simple habits
-                            like 2FA can stop 99% of bulk automated attacks.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+<footer>
+  <p>&copy; 2026 CyberShield Awareness Foundation. All rights reserved.</p>
+  <p style="font-size:0.8rem;">Dedicated to teaching digital resilience to the next generation.</p>
+</footer>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 CyberShield Awareness Foundation. All rights reserved.</p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">Dedicated to teaching digital resilience to the next
-                generation.</p>
-        </div>
-    </footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) entry.target.classList.add('active');
+    });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
 
-    <script src="script.js"></script>
 </body>
-
 </html>
